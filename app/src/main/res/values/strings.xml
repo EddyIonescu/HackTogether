@@ -16,4 +16,9 @@
     </string>
     <string name="parse_app_id">ooPJOqMCb7HjxeNAueIE4gqPEmolGTzH2MRLO6UY</string>
     <string name="parse_client_key">PdnNP3Z454K1vakJ6sFXBWdtiHkrTPO3DaLIt2Eu</string>
+    <string-array name="levels_array">
+        <item>Hacker Newbie</item>
+        <item>Intermediate Hacker</item>
+        <item>Hacker Guru</item>
+    </string-array>
 </resources>

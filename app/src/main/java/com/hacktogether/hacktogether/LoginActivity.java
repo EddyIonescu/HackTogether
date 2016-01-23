@@ -20,10 +20,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 
 import com.parse.ParseException;
 import com.parse.ParseUser;
@@ -47,14 +49,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * Keep track of the login task to ensure we can cancel it if requested.
      */
     private UserLoginTask mAuthTask = null;
-
+    private int spinnerIndex = -1;
     // UI references.
     private EditText mUsernameView;
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
-
     public ParseUser user;
 
     @Override
@@ -87,8 +88,38 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         });
 
+        //Drop-down for selecting a level - for registration only
+        Spinner spinner = (Spinner) findViewById(R.id.spinner);
+
+        // Create an adapter from the string array resource and use
+        // android's inbuilt layout file simple_spinner_item
+        // that represents the default spinner in the UI
+        ArrayAdapter adapter = ArrayAdapter.createFromResource(this, R.array.levels_array, android.R.layout.simple_spinner_item);
+        // Set the layout to use for each dropdown item
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                spinnerIndex = position;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                spinnerIndex = -1;
+            }
+        });
+
+
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+    }
+
+    public void onItemSelected(AdapterView<?> parent, View view,
+                               int pos, long id) {
+        // An item was selected. You can retrieve the selected item using
+        // parent.getItemAtPosition(pos)
     }
 
     private void populateAutoComplete() {
@@ -312,9 +343,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             try {
                 user = ParseUser.logIn(mEmail, mPassword);
                 //...next
-            }
-            catch (ParseException e){
-                if(e.getCode()==205){ //email doesn't exist
+            } catch (ParseException e) {
+                if (e.getCode() == 205) { //email doesn't exist
                     // TODO: register the new account here.
                     user = new ParseUser();
                     user.setUsername(mUserName);
@@ -322,16 +352,25 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     user.setPassword(mPassword);
                     user.saveInBackground();
                     //next...
-                }
-                else{
+                    switch (spinnerIndex) {
+                        case 0:
+                            //beginner
+                            break;
+                        case 1:
+                            //intermediate
+                            break;
+                        case 2:
+                            //guru
+                            break;
+                    }
+                } else {
                     new AlertDialog.Builder(LoginActivity.this)
                             .setTitle("Invalid Credentials")
                             .setMessage("Incorrect username/password. Please try again")
                             .setIcon(android.R.drawable.ic_dialog_alert)
                             .show();
                 }
-            }
-            catch (Exception e){
+            } catch (Exception e) {
                 new AlertDialog.Builder(LoginActivity.this)
                         .setTitle("Error")
                         .setMessage("Sorry, something went wrong")
