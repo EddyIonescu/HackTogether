@@ -357,9 +357,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     try {
                         System.out.println("make new account");
                         user = new ParseUser();
-                        user.setUsername(mUserName);
-                        user.setEmail(mEmail);
+                        user.setUsername(mEmail);
+                        user.put("name", mUserName);
                         user.setPassword(mPassword);
+                        user.put("assigned", false);
                         user.signUp();
                         user.save();
                         switch (spinnerIndex) {
@@ -407,6 +408,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
+                LoginActivity.this.startActivity(new Intent(LoginActivity.this, LoginActivity.class));
             }
         }
 
