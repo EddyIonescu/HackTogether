@@ -64,25 +64,25 @@ public class NewbieActivity extends AppCompatActivity {
                 System.out.println("team 1");
                 teamquery1 = teamquery1.whereEqualTo("P1", ParseUser.getCurrentUser().getUsername());
                 ParseUser.getCurrentUser().put("assigned", true);
-                ParseUser.getCurrentUser().put("P1", teamquery1.get("P2"));
-                ParseUser.getCurrentUser().put("P2", teamquery1.get("P3"));
-                ParseUser.getCurrentUser().put("Guru", teamquery1.get("Guru"));
+                ParseUser.getCurrentUser().put("P1", teamquery1.getFirst().get("P2"));
+                ParseUser.getCurrentUser().put("P2", teamquery1.getFirst().get("P3"));
+                ParseUser.getCurrentUser().put("Guru", teamquery1.getFirst().get("Guru"));
             }
             else if(teamquery2.whereEqualTo("P2", ParseUser.getCurrentUser().getUsername()).count()>0){
                 System.out.println("team 2");
-                //teamquery2 = teamquery2.whereEqualTo("P2", ParseUser.getCurrentUser().getUsername());
+                teamquery2 = teamquery2.whereEqualTo("P2", ParseUser.getCurrentUser().getUsername());
                 ParseUser.getCurrentUser().put("assigned", true);
-                ParseUser.getCurrentUser().put("P1", teamquery2.get("P1"));
-                ParseUser.getCurrentUser().put("P2", teamquery2.get("P3"));
-                ParseUser.getCurrentUser().put("Guru", teamquery2.get("Guru"));
+                ParseUser.getCurrentUser().put("P1", teamquery2.getFirst().get("P1"));
+                ParseUser.getCurrentUser().put("P2", teamquery2.getFirst().get("P3"));
+                ParseUser.getCurrentUser().put("Guru", teamquery2.getFirst().get("Guru"));
             }
             else if(teamquery3.whereEqualTo("P3", ParseUser.getCurrentUser().getUsername()).count()>0){
                 System.out.println("team 3");
                 teamquery3 = teamquery3.whereEqualTo("P3", ParseUser.getCurrentUser().getUsername());
                 ParseUser.getCurrentUser().put("assigned", true);
-                ParseUser.getCurrentUser().put("P1", teamquery3.get("P1"));
-                ParseUser.getCurrentUser().put("P2", teamquery3.get("P2"));
-                ParseUser.getCurrentUser().put("Guru", teamquery3.get("Guru"));
+                ParseUser.getCurrentUser().put("P1", teamquery3.getFirst().get("P1"));
+                ParseUser.getCurrentUser().put("P2", teamquery3.getFirst().get("P2"));
+                ParseUser.getCurrentUser().put("Guru", teamquery3.getFirst().get("Guru"));
             }
             ParseUser.getCurrentUser().put("devpost", teamquery.get("Guru").get("devpost"));
         }
