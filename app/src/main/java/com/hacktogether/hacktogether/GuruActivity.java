@@ -97,7 +97,7 @@ public class GuruActivity extends AppCompatActivity {
                 ParseUser.getCurrentUser().put("android", c2.isChecked());
                 ParseUser.getCurrentUser().put("web", c3.isChecked());
                 ParseUser.getCurrentUser().put("hardware", c4.isChecked());
-                ParseUser.getCurrentUser().put("devpost", devpost);
+                ParseUser.getCurrentUser().put("devpost", devpost.getText().toString());
                 try {
                     ParseUser.getCurrentUser().save();
                     new AlertDialog.Builder(this)
