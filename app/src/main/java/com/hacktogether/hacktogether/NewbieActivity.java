@@ -13,16 +13,14 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
-import com.parse.Parse;
 import com.parse.ParseUser;
 
 public class NewbieActivity extends AppCompatActivity {
 
-    CheckBox c1 = (CheckBox)findViewById(R.id.checkbox1); //ios
-    CheckBox c2 = (CheckBox)findViewById(R.id.checkbox2); //android
-    CheckBox c3 = (CheckBox)findViewById(R.id.checkbox3); //web
-    CheckBox c4 = (CheckBox)findViewById(R.id.checkbox4); //arduino
-    CheckBox c5 = (CheckBox)findViewById(R.id.checkbox5); //raspberry pi
+    CheckBox c1; //ios
+    CheckBox c2; //android
+    CheckBox c3; //web
+    CheckBox c4; //arduino and raspberry pi
     Button save = (Button)findViewById(R.id.save);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,10 +28,6 @@ public class NewbieActivity extends AppCompatActivity {
         setContentView(R.layout.activity_newbie);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        Parse.enableLocalDatastore(this);
-        Parse.initialize(this, getResources().getString(R.string.parse_app_id),
-                getResources().getString(R.string.parse_client_key));
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -45,12 +39,17 @@ public class NewbieActivity extends AppCompatActivity {
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        c1 = (CheckBox)findViewById(R.id.checkbox1); //ios
+        c2 = (CheckBox)findViewById(R.id.checkbox2); //android
+        c3 = (CheckBox)findViewById(R.id.checkbox3); //web
+        c4 = (CheckBox)findViewById(R.id.checkbox4); //arduino and raspberry pi
+        save = (Button)findViewById(R.id.save);
+
         if(ParseUser.getCurrentUser().getBoolean("assigned")){
             c1.setClickable(false);
             c2.setClickable(false);
             c3.setClickable(false);
             c4.setClickable(false);
-            c5.setClickable(false);
             save.setClickable(false);
             String teams = "Team-members: " + ParseUser.getCurrentUser().get("p1") + ", \n" +
                     ParseUser.getCurrentUser().get("p2") + ", \n" + "Hacker-Guru: " +
@@ -78,8 +77,7 @@ public class NewbieActivity extends AppCompatActivity {
                 ParseUser.getCurrentUser().put("ios", c1.isChecked());
                 ParseUser.getCurrentUser().put("android", c2.isChecked());
                 ParseUser.getCurrentUser().put("web", c3.isChecked());
-                ParseUser.getCurrentUser().put("arduino", c4.isChecked());
-                ParseUser.getCurrentUser().put("raspberry-pi", c5.isChecked());
+                ParseUser.getCurrentUser().put("hardware", c4.isChecked());
                 ParseUser.getCurrentUser().saveInBackground();
             }
             else{

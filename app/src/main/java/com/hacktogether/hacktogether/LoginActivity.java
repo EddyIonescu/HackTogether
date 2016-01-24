@@ -30,6 +30,9 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.parse.Parse;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
@@ -62,6 +65,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mProgressView;
     private View mLoginFormView;
     public ParseUser user;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,6 +130,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
 
@@ -142,7 +153,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
         if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
             Snackbar.make(mEmailView, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
-                    .setAction(android.R.string.ok, new View.OnClickListener() {
+                    .setAction(android.R.string.ok, new OnClickListener() {
                         @Override
                         @TargetApi(Build.VERSION_CODES.M)
                         public void onClick(View v) {
@@ -312,6 +323,46 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mEmailView.setAdapter(adapter);
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Login Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app deep link URI is correct.
+                Uri.parse("android-app://com.hacktogether.hacktogether/http/host/path")
+        );
+        AppIndex.AppIndexApi.start(client, viewAction);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Login Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app deep link URI is correct.
+                Uri.parse("android-app://com.hacktogether.hacktogether/http/host/path")
+        );
+        AppIndex.AppIndexApi.end(client, viewAction);
+        client.disconnect();
+    }
+
 
     private interface ProfileQuery {
         String[] PROJECTION = {
@@ -342,17 +393,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         @Override
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
-
             try {
                 //System.out.println(mEmail);
                 //System.out.println(mPassword);
                 ParseQuery<ParseUser> queryuserlist = ParseUser.getQuery();
                 //TODO: the above line is very slow, unscalable, and insecure
                 queryuserlist.whereEqualTo("Username", mEmail);
-                if(queryuserlist.count()>0) {
+                if (queryuserlist.count() > 0) {
                     user = ParseUser.logIn(mEmail, mPassword);
-                }
-                else{
+                } else {
                     // TODO: register the new account here.
                     try {
                         System.out.println("make new account");
@@ -361,32 +410,34 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         user.put("name", mUserName);
                         user.setPassword(mPassword);
                         user.put("assigned", false);
-                        user.signUp();
-                        user.save();
                         switch (spinnerIndex) {
                             case 0:
                                 //beginner
                                 System.out.println("beginner");
                                 status = 0;
+                                user.put("level", "newbie");
                                 break;
                             case 1:
                                 //intermediate
                                 System.out.println("intermediate");
                                 status = 1;
+                                user.put("level", "intermediate");
                                 break;
                             case 2:
                                 //guru
                                 System.out.println("guru");
                                 status = 2;
+                                user.put("level", "guru");
                                 break;
                         }
-                    }
-                    catch (Exception e1){
+                        user.signUp();
+                        user.save();
+                    } catch (Exception e1) {
                         System.out.println("error while making new account " + e1.getMessage());
                         return false;
                     }
                 }
-            } catch(Exception e){
+            } catch (Exception e) {
                 System.out.println("something else " + e.getMessage());
                 //likely invalid credentials
                 return false;
@@ -394,13 +445,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             return true;
         }
 
-        //@Override
-        protected void onPostExecute(final boolean success) {
+        @Override
+        protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
             showProgress(false);
 
             if (success) {
-                switch (status){
+                switch (status) {
                     case 0:
                         System.out.println("go to newbie form");
                         finish();

@@ -50,13 +50,9 @@
         <CheckBox android:id="@+id/checkbox4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Hardware - Arduino"
-            android:onClick="onCheckboxClicked4"/>
-        <CheckBox android:id="@+id/checkbox5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Hardware - Raspberry Pi"
-            android:onClick="onCheckboxClicked5"/>
+            android:text="Hardware - Arduino / Raspberry Pi"
+            android:onClick="onCheckboxClicked4"
+            android:checked="false" />
 
         <Button
             android:layout_width="263dp"
