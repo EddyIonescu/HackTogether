@@ -8,8 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-import com.parse.Parse;
-
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -28,10 +26,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Parse.enableLocalDatastore(MainActivity.this);
-        Parse.initialize(this, getResources().getString(R.string.parse_app_id),
-                getResources().getString(R.string.parse_client_key));
-        
+        //System.out.println("initialized parse");
+        //Parse.enableLocalDatastore(MainActivity.this);
+        //Parse.initialize(this, getResources().getString(R.string.parse_app_id),getResources().getString(R.string.parse_client_key));
+
         MainActivity.this.startActivity(new Intent(MainActivity.this, LoginActivity.class));
     }
 

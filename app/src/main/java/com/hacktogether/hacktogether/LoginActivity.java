@@ -33,7 +33,6 @@ import android.widget.TextView;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.parse.Parse;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
@@ -75,9 +74,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        Parse.enableLocalDatastore(LoginActivity.this);
-        Parse.initialize(LoginActivity.this, getResources().getString(R.string.parse_app_id),
-                getResources().getString(R.string.parse_client_key));
         // Set up the login form.
         mUsernameView = (EditText) findViewById(R.id.username);
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
@@ -456,6 +452,16 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         System.out.println("go to newbie form");
                         finish();
                         LoginActivity.this.startActivity(new Intent(LoginActivity.this, NewbieActivity.class));
+                        break;
+                    case 1:
+                        System.out.println("go to intermediate form");
+                        finish();
+                        LoginActivity.this.startActivity(new Intent(LoginActivity.this, NewbieActivity.class));
+                        break;
+                    case 2:
+                        System.out.println("go to guru form");
+                        finish();
+                        LoginActivity.this.startActivity(new Intent(LoginActivity.this, GuruActivity.class));
                         break;
                 }
             } else {

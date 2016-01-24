@@ -113,4 +113,6 @@
     </string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_login5">Sign in</string>
+    <string name="title_activity_guru">GuruActivity</string>
+    <string name="title_activity_main">MainActivity</string>
 </resources>

@@ -5,13 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.hacktogether.hacktogether.NewbieActivity"
-    tools:showIn="@layout/activity_newbie">
+    tools:context="com.hacktogether.hacktogether.GuruActivity"
+    tools:showIn="@layout/activity_guru">
+
     <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginLeft="26dp">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginLeft="26dp">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -21,15 +22,9 @@
             android:id="@+id/header"/>
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:text=""
-            android:textStyle="bold"
-            android:id="@+id/devpost"/>
-        <TextView
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/text_margin"
-            android:text="Which of these platforms do you want to use at PennApps? \n\nChoose the ones you've used before, and if there are none, the ones you're most interested in" />
+            android:text="Which of these platforms are you proficient in? \n\nOnly choose ones that you are willing to mentor less-experienced hackers in" />
 
         <CheckBox android:id="@+id/checkbox1"
             android:layout_width="wrap_content"
@@ -57,6 +52,21 @@
             android:text="Hardware - Arduino / Raspberry Pi"
             android:onClick="onCheckboxClicked4"
             android:checked="false" />
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/text_margin">
+
+            <EditText
+                android:id="@+id/devpost"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Devpost Link"
+                android:maxLines="1"
+                android:singleLine="true" />
+
+        </android.support.design.widget.TextInputLayout>
 
         <Button
             android:layout_width="263dp"
