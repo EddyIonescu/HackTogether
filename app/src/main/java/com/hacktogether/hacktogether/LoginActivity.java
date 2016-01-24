@@ -67,8 +67,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        Parse.enableLocalDatastore(this);
-        Parse.initialize(this, getResources().getString(R.string.parse_app_id),
+        Parse.enableLocalDatastore(LoginActivity.this);
+        Parse.initialize(LoginActivity.this, getResources().getString(R.string.parse_app_id),
                 getResources().getString(R.string.parse_client_key));
         // Set up the login form.
         mUsernameView = (EditText) findViewById(R.id.username);
@@ -348,7 +348,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 //System.out.println(mPassword);
                 ParseQuery<ParseUser> queryuserlist = ParseUser.getQuery();
                 //TODO: the above line is very slow, unscalable, and insecure
-                queryuserlist.whereEqualTo("email", mEmail);
+                queryuserlist.whereEqualTo("Username", mEmail);
                 if(queryuserlist.count()>0) {
                     user = ParseUser.logIn(mEmail, mPassword);
                 }
@@ -402,12 +402,16 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             if (success) {
                 switch (status){
                     case 0:
+                        System.out.println("go to newbie form");
+                        finish();
                         LoginActivity.this.startActivity(new Intent(LoginActivity.this, NewbieActivity.class));
                         break;
                 }
             } else {
+                System.out.println("try again");
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
+                finish();
                 LoginActivity.this.startActivity(new Intent(LoginActivity.this, LoginActivity.class));
             }
         }
