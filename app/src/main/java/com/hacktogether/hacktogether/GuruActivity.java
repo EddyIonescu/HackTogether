@@ -23,7 +23,7 @@ public class GuruActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_newbie);
+        setContentView(R.layout.activity_guru);
         this.setTitle("Gurus");
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

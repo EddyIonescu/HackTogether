@@ -26,7 +26,7 @@ public class NewbieActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_newbie);
-        this.setTitle("Newbies");
+        this.setTitle("Newbies/Intermediate");
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -77,7 +77,7 @@ public class NewbieActivity extends AppCompatActivity {
         if(c1.isChecked() && c2.isChecked()){
             new AlertDialog.Builder(this)
                     .setTitle("Sorry")
-                    .setMessage("You've checked both iOS and Android. In order to properly learn one of them, please choose either one")
+                    .setMessage("You've checked both iOS and Android. In order to properly learn/practise one of them, please choose either one")
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .show();
         }

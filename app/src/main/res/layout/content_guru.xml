@@ -53,10 +53,6 @@
             android:onClick="onCheckboxClicked4"
             android:checked="false" />
 
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/text_margin">
 
             <EditText
                 android:id="@+id/devpost"
@@ -66,7 +62,6 @@
                 android:maxLines="1"
                 android:singleLine="true" />
 
-        </android.support.design.widget.TextInputLayout>
 
         <Button
             android:layout_width="263dp"
