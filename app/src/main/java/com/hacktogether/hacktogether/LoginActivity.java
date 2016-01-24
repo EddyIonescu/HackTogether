@@ -394,9 +394,19 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 //System.out.println(mPassword);
                 ParseQuery<ParseUser> queryuserlist = ParseUser.getQuery();
                 //TODO: the above line is very slow, unscalable, and insecure
-                queryuserlist.whereEqualTo("Username", mEmail);
+                queryuserlist.whereEqualTo("username", mEmail);
                 if (queryuserlist.count() > 0) {
+                    System.out.println("User exists");
                     user = ParseUser.logIn(mEmail, mPassword);
+                    if(user.get("level").equals("newbie")){
+                        status = 0;
+                    }
+                    else if(user.get("level").equals("intermediate")){
+                        status = 1;
+                    }
+                    else{
+                        status = 2;
+                    }
                 } else {
                     // TODO: register the new account here.
                     try {

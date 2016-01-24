@@ -9,8 +9,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.TextView;
 
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 public class GuruActivity extends AppCompatActivity {
@@ -19,6 +23,7 @@ public class GuruActivity extends AppCompatActivity {
     CheckBox c2; //android
     CheckBox c3; //web
     CheckBox c4; //arduino and raspberry pi
+    EditText devpost;
     Button save;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +48,26 @@ public class GuruActivity extends AppCompatActivity {
         c3 = (CheckBox)findViewById(R.id.checkbox3); //web
         c4 = (CheckBox)findViewById(R.id.checkbox4); //arduino and raspberry pi
         save = (Button)findViewById(R.id.save);
+        devpost = (EditText)findViewById(R.id.devpost);
+
+        c1.setChecked(ParseUser.getCurrentUser().getBoolean("ios"));
+        c2.setChecked(ParseUser.getCurrentUser().getBoolean("android"));
+        c3.setChecked(ParseUser.getCurrentUser().getBoolean("web"));
+        c4.setChecked(ParseUser.getCurrentUser().getBoolean("hardware"));
+
+        try {
+            ParseQuery<ParseObject> teamquery = ParseQuery.getQuery("Team");
+            if(teamquery.whereEqualTo("Guru", ParseUser.getCurrentUser().getUsername()).count()>0){
+                teamquery = teamquery.whereEqualTo("Guru", ParseUser.getCurrentUser().getUsername());
+                ParseUser.getCurrentUser().put("assigned", true);
+                ParseUser.getCurrentUser().put("P1", teamquery.get("P1"));
+                ParseUser.getCurrentUser().put("P2", teamquery.get("P2"));
+                ParseUser.getCurrentUser().put("P3", teamquery.get("P3"));
+            }
+        }
+        catch (ParseException e){
+            System.out.println(e.getMessage());
+        }
 
         if(ParseUser.getCurrentUser().getBoolean("assigned")){
             c1.setClickable(false);
@@ -50,11 +75,12 @@ public class GuruActivity extends AppCompatActivity {
             c3.setClickable(false);
             c4.setClickable(false);
             save.setClickable(false);
-            String teams = "Your Team-members: " + ParseUser.getCurrentUser().get("p1") + ", \n" +
-                    ParseUser.getCurrentUser().get("p2") + ", \n" +
-                    ParseUser.getCurrentUser().get("p3");
+            String teams = "Your Team-members: " + ParseUser.getCurrentUser().get("P1") + ", \n" +
+                    ParseUser.getCurrentUser().get("P2") + ", \n" +
+                    ParseUser.getCurrentUser().get("P3");
             TextView header = (TextView) findViewById(R.id.header);
             header.setText(teams);
+            devpost.setText(ParseUser.getCurrentUser().get("devpost").toString());
         }
     }
     public void onCheckboxClicked1(View view){
@@ -71,6 +97,7 @@ public class GuruActivity extends AppCompatActivity {
                 ParseUser.getCurrentUser().put("android", c2.isChecked());
                 ParseUser.getCurrentUser().put("web", c3.isChecked());
                 ParseUser.getCurrentUser().put("hardware", c4.isChecked());
+                ParseUser.getCurrentUser().put("devpost", devpost);
                 try {
                     ParseUser.getCurrentUser().save();
                     new AlertDialog.Builder(this)

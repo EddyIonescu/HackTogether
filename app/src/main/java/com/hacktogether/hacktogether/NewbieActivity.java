@@ -13,6 +13,9 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 public class NewbieActivity extends AppCompatActivity {
@@ -46,22 +49,56 @@ public class NewbieActivity extends AppCompatActivity {
         c4 = (CheckBox)findViewById(R.id.checkbox4); //arduino and raspberry pi
         save = (Button)findViewById(R.id.save);
 
-        if(ParseUser.getCurrentUser().getBoolean("assigned")){
+        c1.setChecked(ParseUser.getCurrentUser().getBoolean("ios"));
+        c2.setChecked(ParseUser.getCurrentUser().getBoolean("android"));
+        c3.setChecked(ParseUser.getCurrentUser().getBoolean("web"));
+        c4.setChecked(ParseUser.getCurrentUser().getBoolean("hardware"));
+
+        try {
+            ParseQuery<ParseObject> teamquery = ParseQuery.getQuery("Team");
+            if(teamquery.whereEqualTo("P1", ParseUser.getCurrentUser().getUsername()).count()>0){
+                teamquery = teamquery.whereEqualTo("P1", ParseUser.getCurrentUser().getUsername());
+                ParseUser.getCurrentUser().put("assigned", true);
+                ParseUser.getCurrentUser().put("P1", teamquery.get("P2"));
+                ParseUser.getCurrentUser().put("P2", teamquery.get("P3"));
+                ParseUser.getCurrentUser().put("Guru", teamquery.get("Guru"));
+            }
+            else if(teamquery.whereEqualTo("P2", ParseUser.getCurrentUser().getUsername()).count()>0){
+                teamquery = teamquery.whereEqualTo("P2", ParseUser.getCurrentUser().getUsername());
+                ParseUser.getCurrentUser().put("assigned", true);
+                ParseUser.getCurrentUser().put("P1", teamquery.get("P1"));
+                ParseUser.getCurrentUser().put("P2", teamquery.get("P3"));
+                ParseUser.getCurrentUser().put("Guru", teamquery.get("Guru"));
+            }
+            else if(teamquery.whereEqualTo("P3", ParseUser.getCurrentUser().getUsername()).count()>0){
+                teamquery = teamquery.whereEqualTo("P3", ParseUser.getCurrentUser().getUsername());
+                ParseUser.getCurrentUser().put("assigned", true);
+                ParseUser.getCurrentUser().put("P1", teamquery.get("P1"));
+                ParseUser.getCurrentUser().put("P2", teamquery.get("P2"));
+                ParseUser.getCurrentUser().put("Guru", teamquery.get("Guru"));
+            }
+            ParseUser.getCurrentUser().put("devpost", teamquery.get("Guru").get("devpost"));
+        }
+        catch (ParseException e){
+            System.out.println(e.getMessage());
+        }
+        if(ParseUser.getCurrentUser().getBoolean("assigned")) {
             c1.setClickable(false);
             c2.setClickable(false);
             c3.setClickable(false);
             c4.setClickable(false);
             save.setClickable(false);
-            String teams = "Team-members: " + ParseUser.getCurrentUser().get("p1") + ", \n" +
-                    ParseUser.getCurrentUser().get("p2") + ", \n" + "Hacker-Guru: " +
-                    ParseUser.getCurrentUser().get("guruname");
+
+            String teams = "Team-members: " + ParseUser.getCurrentUser().get("P1") + ", \n" +
+                    ParseUser.getCurrentUser().get("P2") + ", \n" + "Hacker-Guru: " +
+                    ParseUser.getCurrentUser().get("Guru");
             TextView header = (TextView) findViewById(R.id.header);
             header.setText(teams);
 
             TextView devpost = (TextView) findViewById(R.id.devpost);
             devpost.setText(Html.fromHtml("<a href="
-                    + ParseUser.getCurrentUser().get("gurudevpost") + "> " +
-                    ParseUser.getCurrentUser().get("gurudevpost")));
+                    + ParseUser.getCurrentUser().get("devpost") + "> " +
+                    ParseUser.getCurrentUser().get("devpost")));
             devpost.setMovementMethod(LinkMovementMethod.getInstance());
         }
     }
@@ -77,7 +114,7 @@ public class NewbieActivity extends AppCompatActivity {
         if(c1.isChecked() && c2.isChecked()){
             new AlertDialog.Builder(this)
                     .setTitle("Sorry")
-                    .setMessage("You've checked both iOS and Android. In order to properly learn/practise one of them, please choose either one")
+                    .setMessage("You've checked both iOS and Android. In order to fully learn/practise one of them, please choose either one")
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .show();
         }
