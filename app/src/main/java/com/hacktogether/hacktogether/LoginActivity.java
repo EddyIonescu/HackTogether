@@ -3,9 +3,9 @@ package com.hacktogether.hacktogether;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.app.AlertDialog;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -18,16 +18,20 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
-import com.parse.ParseException;
+import com.parse.Parse;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
@@ -50,6 +54,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      */
     private UserLoginTask mAuthTask = null;
     private int spinnerIndex = -1;
+    private int status = -1;
     // UI references.
     private EditText mUsernameView;
     private AutoCompleteTextView mEmailView;
@@ -62,13 +67,16 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        Parse.enableLocalDatastore(this);
+        Parse.initialize(this, getResources().getString(R.string.parse_app_id),
+                getResources().getString(R.string.parse_client_key));
         // Set up the login form.
         mUsernameView = (EditText) findViewById(R.id.username);
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
 
         mPasswordView = (EditText) findViewById(R.id.password);
-        /*
+
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -79,7 +87,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 return false;
             }
         });
-        */
+
         Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -116,11 +124,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mProgressView = findViewById(R.id.login_progress);
     }
 
-    public void onItemSelected(AdapterView<?> parent, View view,
-                               int pos, long id) {
-        // An item was selected. You can retrieve the selected item using
-        // parent.getItemAtPosition(pos)
-    }
 
     private void populateAutoComplete() {
         if (!mayRequestContacts()) {
@@ -341,53 +344,66 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // TODO: attempt authentication against a network service.
 
             try {
-                user = ParseUser.logIn(mEmail, mPassword);
-                //...next
-            } catch (ParseException e) {
-                if (e.getCode() == 205) { //email doesn't exist
-                    // TODO: register the new account here.
-                    user = new ParseUser();
-                    user.setUsername(mUserName);
-                    user.setEmail(mEmail);
-                    user.setPassword(mPassword);
-                    user.saveInBackground();
-                    //next...
-                    switch (spinnerIndex) {
-                        case 0:
-                            //beginner
-                            break;
-                        case 1:
-                            //intermediate
-                            break;
-                        case 2:
-                            //guru
-                            break;
-                    }
-                } else {
-                    new AlertDialog.Builder(LoginActivity.this)
-                            .setTitle("Invalid Credentials")
-                            .setMessage("Incorrect username/password. Please try again")
-                            .setIcon(android.R.drawable.ic_dialog_alert)
-                            .show();
+                //System.out.println(mEmail);
+                //System.out.println(mPassword);
+                ParseQuery<ParseUser> queryuserlist = ParseUser.getQuery();
+                //TODO: the above line is very slow, unscalable, and insecure
+                queryuserlist.whereEqualTo("email", mEmail);
+                if(queryuserlist.count()>0) {
+                    user = ParseUser.logIn(mEmail, mPassword);
                 }
-            } catch (Exception e) {
-                new AlertDialog.Builder(LoginActivity.this)
-                        .setTitle("Error")
-                        .setMessage("Sorry, something went wrong")
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .show();
+                else{
+                    // TODO: register the new account here.
+                    try {
+                        System.out.println("make new account");
+                        user = new ParseUser();
+                        user.setUsername(mUserName);
+                        user.setEmail(mEmail);
+                        user.setPassword(mPassword);
+                        user.signUp();
+                        user.save();
+                        switch (spinnerIndex) {
+                            case 0:
+                                //beginner
+                                System.out.println("beginner");
+                                status = 0;
+                                break;
+                            case 1:
+                                //intermediate
+                                System.out.println("intermediate");
+                                status = 1;
+                                break;
+                            case 2:
+                                //guru
+                                System.out.println("guru");
+                                status = 2;
+                                break;
+                        }
+                    }
+                    catch (Exception e1){
+                        System.out.println("error while making new account " + e1.getMessage());
+                        return false;
+                    }
+                }
+            } catch(Exception e){
+                System.out.println("something else " + e.getMessage());
+                //likely invalid credentials
+                return false;
             }
-
             return true;
         }
 
-        @Override
-        protected void onPostExecute(final Boolean success) {
+        //@Override
+        protected void onPostExecute(final boolean success) {
             mAuthTask = null;
             showProgress(false);
 
             if (success) {
-                finish();
+                switch (status){
+                    case 0:
+                        LoginActivity.this.startActivity(new Intent(LoginActivity.this, NewbieActivity.class));
+                        break;
+                }
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();

@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -23,12 +24,23 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <meta-data
             android:name="com.parse.APPLICATION_ID"
             android:value="parse_app_id" />
         <meta-data
             android:name="com.parse.CLIENT_KEY"
             android:value="parse_client_key" />
+
+        <activity
+            android:name=".NewbieActivity"
+            android:label="@string/title_activity_newbie"
+            android:parentActivityName=".LoginActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.hacktogether.hacktogether.LoginActivity" />
+        </activity>
     </application>
 
 </manifest>

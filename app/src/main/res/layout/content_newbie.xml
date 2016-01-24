@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.hacktogether.hacktogether.NewbieActivity"
+    tools:showIn="@layout/activity_newbie">
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginLeft="30dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/text_margin"
+            android:text="Let us get to know you better"
+            android:textStyle="bold"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/text_margin"
+            android:text="Which of these platforms do you want to use at PennApps? \n\nChoose the ones you've used before, and if there are none, the ones you are most interested in" />
+
+        <CheckBox android:id="@+id/checkbox1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="iOS App"
+            android:onClick="onCheckboxClicked1"/>
+        <CheckBox android:id="@+id/checkbox2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Android App"
+            android:onClick="onCheckboxClicked2"/>
+        <CheckBox android:id="@+id/checkbox3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Web App (Javascript, Python or Ruby)"
+            android:onClick="onCheckboxClicked3"
+            android:checked="false" />
+        <CheckBox android:id="@+id/checkbox4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hardware - Arduino"
+            android:onClick="onCheckboxClicked4"/>
+        <CheckBox android:id="@+id/checkbox5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hardware - Raspberry Pi"
+            android:onClick="onCheckboxClicked5"/>
+
+        <Button
+            android:layout_width="263dp"
+            android:layout_height="wrap_content"
+            android:text="Save"
+            android:id="@+id/save"
+            android:onClick="onSaveClicked"/>
+    </LinearLayout>
+
+</android.support.v4.widget.NestedScrollView>
